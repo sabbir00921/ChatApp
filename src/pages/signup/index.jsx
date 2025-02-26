@@ -3,6 +3,7 @@ import lib from "../../lib/Signupdata"
 import { FiEye } from "react-icons/fi";
 import { FaEyeSlash } from 'react-icons/fa';
 import { getAuth, createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from "firebase/auth";
+import { toast } from 'react-toastify';
 
 
 
@@ -34,20 +35,19 @@ const Signup = () => {
 
 
     const handlesignup = () => {
-        if (!fullname) {
-            setfullnameerror("!Fullname missing");
-        }
-        else if (!email) {
+        if (!email) {
             setemailerror("!Email missing");
+        }
+        else if (!fullname) {
+            setfullnameerror("!Fullname missing");
         }
         else if (!password) {
             setpassworderror("!Password missing");
         }
         else {
-
-            createUserWithEmailAndPassword(auth, email, password).then((userinfo) => {
+            createUserWithEmailAndPassword(auth, email, password).then(() => {
                 // console.log(userinfo);
-                // alert("Signup succesfully")
+                alert("Signup succesfully")
                 toast.success('🦄 Wow so easy!', {
                     position: "top-left",
                     autoClose: 4000,
@@ -79,7 +79,7 @@ const Signup = () => {
                     console.log(error);
 
                 })
-                // console.log(auth.currentUser);
+            // console.log(auth.currentUser);
         }
     }
 
@@ -125,14 +125,14 @@ const Signup = () => {
                                         {required && <span className=' text-red-600'> *</span>}
                                     </label>
                                     <input className='p-1 outline-0 border-gray-400 border-1 rounded pr-7 '
-                                        type={name == "email" ? "email" : name == "fullname" ? "text" : (eye? "password":"text")
+                                        type={name == "email" ? "email" : name == "fullname" ? "text" : (eye ? "password" : "text")
                                         } placeholder={name}
                                         name={name}
                                         onChange={handleinput} />
                                     {name == "password" && <span
                                         onClick={handelEye}
-                                        className={passworderror && password ==""? ('left-[90%] top-[43%] absolute '):('left-[90%] top-[59%] absolute cursor-pointer')} >{eye? <FiEye />:<FaEyeSlash />}</span>}
-                                        
+                                        className={passworderror && password == "" ? ('left-[90%] top-[43%] absolute ') : ('left-[90%] top-[59%] absolute cursor-pointer')} >{eye ? <FiEye /> : <FaEyeSlash />}</span>}
+
                                     {name == "email" && email == "" ? (<span className=' text-red-500'>{emailerror}</span>) :
                                         name == "fullname" && fullname == "" ? (<span className=' text-red-500'>{fullnameerror}</span>) :
                                             name == "password" && password == "" ? (<span className=' text-red-500'>{passworderror}</span>) : ('')
@@ -147,9 +147,9 @@ const Signup = () => {
                     </div>
                 </div>
                 <div className='w-1/2 h-screen bg-red-500 '>
-                <picture>
-                    <img className='object-cover h-full w-full '  src="https://images.pexels.com/photos/1955134/pexels-photo-1955134.jpeg?auto=compress&cs=tinysrgb&w=600" alt="" srcset="" />
-                </picture>
+                    <picture>
+                        <img className='object-cover h-full w-full ' src="https://images.pexels.com/photos/1955134/pexels-photo-1955134.jpeg?auto=compress&cs=tinysrgb&w=600" alt="" srcset="" />
+                    </picture>
                 </div>
             </div>
 
