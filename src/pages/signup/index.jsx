@@ -44,7 +44,7 @@ const Signup = () => {
 
                 // alert("Registration Sucessfull")
 
-                SuccessToast()
+                SuccessToast("Registration Sucessfull")
 
                 updateProfile(auth.currentUser, {
                     displayName: fullname,
@@ -137,7 +137,7 @@ const Signup = () => {
                             ))}
                             <button className=' w-full py-2 text-[16px] bg-mainColor text-white font-semibold rounded-full cursor-pointer mt-10' onClick={handlesignup}>SignUp</button>
                         </form>
-                        <p className='my-5'>AI ready have an account? <span className='text-blue-600  cursor-pointer'>Sign In</span></p>
+                        <p className='my-5'>AI ready have an account?<a href="/signin" className='text-blue-600  cursor-pointer'>Sign In</a></p>
                     </div>
                 </div>
                 <div className='w-1/2 h-screen bg-red-500 '>
