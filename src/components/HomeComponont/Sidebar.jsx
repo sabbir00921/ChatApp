@@ -6,39 +6,42 @@ import { IoHomeOutline } from 'react-icons/io5'
 import { LuMessageCircleMore } from 'react-icons/lu'
 import { RiLogoutBoxRLine } from 'react-icons/ri'
 import { TiUpload } from 'react-icons/ti'
-import { Link } from 'react-router'
+import { Link, useLocation, } from 'react-router'
 
 const Sidebar = () => {
+    const location = useLocation();
     const navigationIcon = [
         {
             id: 1,
-            path:"/home",
+            path: "/home",
             icon: <IoHomeOutline />
         },
         {
             id: 1,
-            path:"/message",
+            path: "/message",
             icon: <LuMessageCircleMore />
         },
         {
             id: 1,
-            path:"/notification",
+            path: "/notification",
             icon: <IoMdNotificationsOutline />
         },
         {
             id: 1,
-            path:"/setting",
+            path: "/setting",
             icon: <AiOutlineSetting />
         },
         {
             id: 1,
-            path:"/signin",
+            path: "/signin",
             icon: <RiLogoutBoxRLine />
         },
     ]
+    // url params Catch
+    // console.log(location);
 
     return (
-        <div className=' h-full  bg-green-400 rounded-2xl'>
+        <div className=' h-full  bg-green-400 rounded-2xl overflow-hidden'>
             <div className='flex justify-center'>
                 <div className='h-[70px] w-[70px] mt-4 rounded-full relative cursor-pointer group'>
                     <picture>
@@ -52,7 +55,7 @@ const Sidebar = () => {
             {/* navigation icon */}
             <div className='flex flex-col gap-y-3 items-center justify-center mt-8'>
                 {navigationIcon?.map(({ icon, id, path }, index) => (
-                    <Link to={path} className={navigationIcon.length - 1 == index ? 'active text-5xl text-white mt-20 cursor-pointer' : 'text-5xl text-white cursor-pointer'} key={id}>
+                    <Link to={path} className={location.pathname == path ? 'active text-5xl text-white cursor-pointer' : navigationIcon.length - 1 == index ? " text-5xl text-white cursor-pointer mt-20" : "text-5xl text-white cursor-pointer"} key={id}>
                         {icon}
                     </Link>
                 ))}

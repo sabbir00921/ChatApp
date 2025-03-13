@@ -1,11 +1,11 @@
 import React from 'react'
-import Sidebar from '../../components/HomeComponont/Sidebar'
+import GroupList from '../../components/HomeComponont/GroupList'
 
 
 const Index = () => {
   return (
-    <div className='text-center text-5xl'>
-      This is from home.
+    <div className=''>
+      <GroupList/>
     </div>
   )
 }
