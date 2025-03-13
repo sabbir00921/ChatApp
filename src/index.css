@@ -16,3 +16,26 @@ body{
   --color-authColor: var(--authColor);
   --color-mainFontcolor: var(--mainFontcolor);
 }
+
+.active{
+  position: relative;
+  background-color: red;
+  width: 90%;
+  display: flex;
+  justify-content: center;
+  padding: 5px 0px;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+.active::after{
+  position: absolute;
+  content: "";
+  right: 0;
+  top: 0;
+  background-color: yellow;
+  height: 100%;
+  width: 15px;
+  right: -6px;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
