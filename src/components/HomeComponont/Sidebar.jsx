@@ -12,22 +12,27 @@ const Sidebar = () => {
     const navigationIcon = [
         {
             id: 1,
+            path:"/home",
             icon: <IoHomeOutline />
         },
         {
             id: 1,
+            path:"/message",
             icon: <LuMessageCircleMore />
         },
         {
             id: 1,
+            path:"/notification",
             icon: <IoMdNotificationsOutline />
         },
         {
             id: 1,
+            path:"/setting",
             icon: <AiOutlineSetting />
         },
         {
             id: 1,
+            path:"/signin",
             icon: <RiLogoutBoxRLine />
         },
     ]
@@ -46,8 +51,8 @@ const Sidebar = () => {
             </div>
             {/* navigation icon */}
             <div className='flex flex-col gap-y-3 items-center justify-center mt-8'>
-                {navigationIcon?.map(({ icon, id }, index) => (
-                    <Link className={navigationIcon.length - 1 == index ? 'active text-5xl text-white mt-20 cursor-pointer' : 'text-5xl text-white cursor-pointer'} key={id}>
+                {navigationIcon?.map(({ icon, id, path }, index) => (
+                    <Link to={path} className={navigationIcon.length - 1 == index ? 'active text-5xl text-white mt-20 cursor-pointer' : 'text-5xl text-white cursor-pointer'} key={id}>
                         {icon}
                     </Link>
                 ))}

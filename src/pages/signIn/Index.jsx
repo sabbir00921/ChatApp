@@ -90,7 +90,7 @@ const SignIn = () => {
                 </div>
                 <button className='w-full bg-blue-600 py-2 rounded cursor-pointer text-white' type='button' onClick={handleLogin}>Login to Continue</button>
               </form>
-              <p className='my-5'>I have no account?<a href="/" className='text-blue-600  cursor-pointer'> Create account</a></p>
+              <p className='my-5'>I have no account?<a href="/signup" className='text-blue-600  cursor-pointer'> Create account</a></p>
             </div>
           </div>
 
