@@ -3,9 +3,13 @@ import lib from "../../lib/Signupdata"
 import { FiEye } from "react-icons/fi";
 import { FaEyeSlash } from 'react-icons/fa';
 import { getAuth, createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from "firebase/auth";
+import { getDatabase, push, ref, set } from "firebase/database";
+import { useNavigate } from "react-router";
 
 const Signup = () => {
     const data = lib.signupdata();
+    const db = getDatabase();
+    const navigate = useNavigate();
     const { SuccessToast, InfoToast, ErrorToast } = lib;
     // console.log(data);
     //value store state
@@ -41,7 +45,6 @@ const Signup = () => {
 
             createUserWithEmailAndPassword(auth, email, password).then((userinfo) => {
                 // console.log(userinfo);
-
                 // alert("Registration Sucessfull")
 
                 SuccessToast("Registration Sucessfull")
@@ -54,10 +57,18 @@ const Signup = () => {
 
             })
                 .then(() => {
+                    const userdb = ref(db, 'users/');
+                    set(push(userdb), {
+                        userid: auth.currentUser.uid,
+                        username: auth.currentUser.displayName || fullname,
+                        email: auth.currentUser.email || email,
+                        password: password,
+                        profile_picture: auth.currentUser.photoURL || "https://images.pexels.com/photos/15910063/pexels-photo-15910063/free-photo-of-landscape-with-the-matterhorn.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+                    });
                     // alert("send email for verification");
                     InfoToast("send email for verification")
+                    navigate("/")
                     return sendEmailVerification(auth.currentUser);
-
                 })
                 .then((maildata) => {
                     // console.log("mail sucessful", maildata);
@@ -69,7 +80,7 @@ const Signup = () => {
                     ErrorToast(error.code)
 
                 })
-            console.log(auth.currentUser);
+            // console.log(auth.currentUser);
         }
     }
 

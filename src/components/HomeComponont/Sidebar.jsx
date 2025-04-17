@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import proPic from '../../images/Pro.jpg'
 import { AiOutlineSetting } from 'react-icons/ai'
 import { IoMdNotificationsOutline } from 'react-icons/io'
@@ -13,32 +13,66 @@ const Sidebar = () => {
     const navigationIcon = [
         {
             id: 1,
-            path: "/home",
+            path: "/",
             icon: <IoHomeOutline />
         },
         {
-            id: 1,
+            id: 2,
             path: "/message",
             icon: <LuMessageCircleMore />
         },
         {
-            id: 1,
+            id: 3,
             path: "/notification",
             icon: <IoMdNotificationsOutline />
         },
         {
-            id: 1,
+            id: 4,
             path: "/setting",
             icon: <AiOutlineSetting />
         },
         {
-            id: 1,
+            id: 5,
             path: "/signin",
             icon: <RiLogoutBoxRLine />
         },
     ]
     // url params Catch
     // console.log(location);
+    // Cloudinary attach
+    useEffect(() => {
+        const script = document.createElement("script");
+        script.src = "https://upload-widget.cloudinary.com/latest/global/all.js"
+        script.async = true;
+        document.body.appendChild(script)
+        // console.log(script);
+
+    }, [])
+
+    /**Upload profile picture
+     * todo:
+     * handle profile function implement,
+     */
+    const handleProPictureupdate = () => {
+        if(window.cloudinary){
+            cloudinary.createUploadWidget({
+                cloudName: "ddidljqip", uploadPreset: "ChatApp",
+                sources: [ 'local', 'url', 'istock','google_drive']}, (error, result) => { 
+                    if(error){
+                        throw new Error("cloudinary profile picture upload error")
+                    };
+                    console.log(result.info.secure_url);
+                    
+    
+    
+                });
+        }
+        else{
+            throw new Error("Profile picture Upload fail")
+        }
+
+    }
+
 
     return (
         <div className=' h-full  bg-green-400 rounded-2xl overflow-hidden'>
@@ -47,7 +81,7 @@ const Sidebar = () => {
                     <picture>
                         <img className='w-full h-full rounded-full object-cover' src={proPic} alt='proPic' />
                     </picture>
-                    <div className='absolute hidden group-hover:block left-[30%] top-1/2 text-3xl text-white'>
+                    <div onClick={handleProPictureupdate} className='absolute hidden group-hover:block left-[30%] top-1/2 text-3xl text-white'>
                         <TiUpload />
                     </div>
                 </div>

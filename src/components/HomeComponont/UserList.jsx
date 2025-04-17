@@ -8,7 +8,7 @@ const UserList = () => {
         <div className='w-[32%] mb-2 h-[48dvh] overflow-hidden bg-gray-200 px-2 pt-2  rounded-2xl'>
             <div className=' shadow-2xl rounded-2xl h-full'>
                 <div className='flex items-center justify-between p-2 font-black  shadow-2xl rounded-2xl'>
-                    <h1 className=''>Friends<span className='ml-1 rounded-full bg-blue-500 p-[2px] font-normal text-white'>{arrLength}</span></h1>
+                    <h1 className=''>User List<span className='ml-1 rounded-full bg-blue-500 p-[2px] font-normal text-white'>{arrLength}</span></h1>
                     <span className='cursor-pointer'><HiOutlineDotsVertical /></span>
                 </div>
                 <div className='overflow-y-scroll h-[43dvh] '>
