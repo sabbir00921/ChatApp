@@ -1,9 +1,31 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaPlus } from 'react-icons/fa';
 import { HiOutlineDotsVertical } from 'react-icons/hi'
+import { getDatabase, ref, onValue } from "firebase/database";
 
 const UserList = () => {
+    const db = getDatabase();
     const arrLength = 52;
+    const [userList, setUserList] = useState()
+
+
+    useEffect(() => {
+        const userRef = ref(db, 'users/');
+        let userArr = []
+        onValue(userRef, (snapshot) => {
+            snapshot.forEach((item) => {
+                userArr.push({ ...item.val(), userKey: item.key })
+            })
+        });
+        setUserList(userArr)
+        //Cleanup finction
+        return () => {
+            const userRef = ref(db, 'users/');
+        }
+    }, [])
+    console.log(userList);
+
+
     return (
         <div className='w-[32%] mb-2 h-[48dvh] overflow-hidden bg-gray-200 px-2 pt-2  rounded-2xl'>
             <div className=' shadow-2xl rounded-2xl h-full'>
@@ -12,15 +34,15 @@ const UserList = () => {
                     <span className='cursor-pointer'><HiOutlineDotsVertical /></span>
                 </div>
                 <div className='overflow-y-scroll h-[43dvh] '>
-                    {[...new Array(arrLength)].map((_, index) => (
+                    {userList ?.map((user, index) => (
                         <div className={arrLength - 1 == index ? 'flex justify-between items-center p-2 pr-4' : 'flex justify-between items-center p-2 pr-4 border-b-[1px]'}>
                             <div className='w-[40px] h-[40px]  cursor-pointer'>
                                 <picture>
-                                    <img className='rounded-full border-[1px] object-cover' src="https://d.newsweek.com/en/full/2027477/avatar-2-movie.jpg?w=1600&h=1600&q=88&f=a9c76735de5944303f821b996fd8a21c" alt="" />
+                                    <img className='rounded-full border-[1px] object-cover' src={user?.profile_picture} alt="" />
                                 </picture>
                             </div>
                             <div >
-                                <h1 className='font-bold'>Sabbir hossain</h1>
+                                <h1 className='font-bold'>{user.username || "Set Name"}</h1>
                                 <p className='text-sm'>how are you?</p>
                             </div>
                             <div>

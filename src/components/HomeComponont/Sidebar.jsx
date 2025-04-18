@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import proPic from '../../images/Pro.jpg'
 import { AiOutlineSetting } from 'react-icons/ai'
 import { IoMdNotificationsOutline } from 'react-icons/io'
@@ -7,9 +7,13 @@ import { LuMessageCircleMore } from 'react-icons/lu'
 import { RiLogoutBoxRLine } from 'react-icons/ri'
 import { TiUpload } from 'react-icons/ti'
 import { Link, useLocation, } from 'react-router'
+import { getDatabase, ref, onValue } from "firebase/database";
+
 
 const Sidebar = () => {
+    const db = getDatabase();
     const location = useLocation();
+    const [userData, setuserData] = useState([]);
     const navigationIcon = [
         {
             id: 1,
@@ -54,25 +58,49 @@ const Sidebar = () => {
      * handle profile function implement,
      */
     const handleProPictureupdate = () => {
-        if(window.cloudinary){
-            cloudinary.createUploadWidget({
+        if (window.cloudinary) {
+            cloudinary.openUploadWidget({
                 cloudName: "ddidljqip", uploadPreset: "ChatApp",
-                sources: [ 'local', 'url', 'istock','google_drive']}, (error, result) => { 
-                    if(error){
-                        throw new Error("cloudinary profile picture upload error")
-                    };
+                sources: ['local', 'url', 'istock', 'google_drive']
+            }, (error, result) => {
+                if (error) {
+                    throw new Error("cloudinary profile picture upload error")
+                };
+                if (result.info.secure_url) {
                     console.log(result.info.secure_url);
-                    
-    
-    
-                });
+
+                }
+
+
+
+            });
         }
-        else{
+        else {
             throw new Error("Profile picture Upload fail")
         }
 
     }
 
+    /**
+     * Fetch the data from firebase realtime database
+     */
+    useEffect(() => {
+        const ferchData = () => {
+            const userRef = ref(db, 'users/');
+            onValue(userRef, (snapshot) => {
+                let userArr = [];
+                // console.log(snapshot);
+                snapshot.forEach((item) => {
+                    userArr.push({ ...item.val(), userKey: item.key });
+                })
+                setuserData(userArr);
+
+            });
+
+        }
+        ferchData()
+    }, [])
+// console.log(userData);
 
     return (
         <div className=' h-full  bg-green-400 rounded-2xl overflow-hidden'>

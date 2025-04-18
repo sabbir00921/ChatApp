@@ -3,19 +3,20 @@ import { FaGoogle } from 'react-icons/fa'
 import image from "../../images/loginimg.jpg"
 import lib from "../../lib/Signupdata"
 import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { getDatabase, ref, set } from "firebase/database";
+import { getDatabase, ref, set, push } from "firebase/database";
+import { useNavigate } from 'react-router';
 
 
 const SignIn = () => {
   const { SuccessToast, InfoToast, ErrorToast } = lib;
-
+  const navigate = useNavigate();
   const auth = getAuth();
-  const database = getDatabase();
+  const db = getDatabase();
   const [loginInfo, setloginInfo] = useState({
     email: "",
     password: ""
   })
-  console.log(loginInfo);
+  // console.log(loginInfo);
   // Onchange listener
   const loginChange = (e) => {
     const { name, value } = e.target
@@ -37,33 +38,46 @@ const SignIn = () => {
     else {
       const { email, password } = loginInfo;
       createUserWithEmailAndPassword(auth, email, password).then((info) => {
+        console.log(info);
+
         //store information in Database.
-        set(ref(database, "users/"), {
-          email: email,
-          password: password,
-          profile_picture: "imageUrl"
+        const userdb = ref(db, 'users/');
+        set(push(userdb), {
+          username: info?.user?.displayName || null,
+          email: info?.user?.email,
+          uID: info?.user?.uid,
+          profile_picture: "https://e7.pngegg.com/pngimages/84/165/png-clipart-united-states-avatar-organization-information-user-avatar-service-computer-wallpaper-thumbnail.png"
         });
         SuccessToast("Login succesfull")
-      }).catch((err) => {
-        ErrorToast(err.code);
-
       })
+        .then(() => {
+          navigate("/")
+        }).catch((err) => {
+          ErrorToast(err.code);
+
+        })
     }
 
   }
   // handle google function implement
   const handleGoogle = () => {
     const provider = new GoogleAuthProvider()
-    signInWithPopup(auth, provider).then((userinfo) => {
-      set(ref(database, 'users/'), {
-        username: "Sabbir",
-        email: "hghg@gmail.com",
-        profile_picture: "imageUrl"
-      });
-
-    }).catch(() => {
-      console.error("from google login")
-    })
+    signInWithPopup(auth, provider)
+      .then((userinfo) => {
+        const userdb = ref(db, 'users/');
+        set(push(userdb), {
+          username: userinfo?.user?.displayName,
+          email: userinfo?.user?.email,
+          uID: userinfo?.user?.uid,
+          profile_picture: userinfo?.user?.photoURL
+        })
+        console.log("success", userinfo);
+      })
+      .then(() => {
+        navigate("/")
+      }).catch(() => {
+        console.error("from google login")
+      })
   }
 
   return (
