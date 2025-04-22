@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { FaGoogle } from 'react-icons/fa'
 import image from "../../images/loginimg.jpg"
 import lib from "../../lib/Signupdata"
-import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword } from "firebase/auth";
 import { getDatabase, ref, set, push } from "firebase/database";
 import { useNavigate } from 'react-router';
 
@@ -37,20 +37,10 @@ const SignIn = () => {
     }
     else {
       const { email, password } = loginInfo;
-      createUserWithEmailAndPassword(auth, email, password).then((info) => {
-        console.log(info);
 
-        //store information in Database.
-        const userdb = ref(db, 'users/');
-        set(push(userdb), {
-          username: info?.user?.displayName || null,
-          email: info?.user?.email,
-          uID: info?.user?.uid,
-          profile_picture: "https://e7.pngegg.com/pngimages/84/165/png-clipart-united-states-avatar-organization-information-user-avatar-service-computer-wallpaper-thumbnail.png"
-        });
-        SuccessToast("Login succesfull")
-      })
-        .then(() => {
+      signInWithEmailAndPassword(auth, email, password)
+        .then((info) => {
+
           navigate("/")
         }).catch((err) => {
           ErrorToast(err.code);
@@ -68,10 +58,10 @@ const SignIn = () => {
         set(push(userdb), {
           username: userinfo?.user?.displayName,
           email: userinfo?.user?.email,
-          uID: userinfo?.user?.uid,
-          profile_picture: userinfo?.user?.photoURL
+          userid: userinfo?.user?.uid,
+          profile_picture: userinfo?.user?.photoURL || "null"
         })
-        console.log("success", userinfo);
+        // console.log("success", userinfo);  
       })
       .then(() => {
         navigate("/")

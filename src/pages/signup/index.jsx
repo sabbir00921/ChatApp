@@ -67,7 +67,7 @@ const Signup = () => {
                     });
                     // alert("send email for verification");
                     InfoToast("send email for verification")
-                    navigate("/")
+                    navigate("/signin")
                     return sendEmailVerification(auth.currentUser);
                 })
                 .then((maildata) => {

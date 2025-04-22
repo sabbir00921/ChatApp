@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import proPic from '../../images/Pro.jpg'
+import avatar from '../../images/avatar.png'
 import { AiOutlineSetting } from 'react-icons/ai'
 import { IoMdNotificationsOutline } from 'react-icons/io'
 import { IoHomeOutline } from 'react-icons/io5'
@@ -8,12 +8,14 @@ import { RiLogoutBoxRLine } from 'react-icons/ri'
 import { TiUpload } from 'react-icons/ti'
 import { Link, useLocation, } from 'react-router'
 import { getDatabase, ref, onValue } from "firebase/database";
+import { getAuth } from "firebase/auth";
 
 
 const Sidebar = () => {
     const db = getDatabase();
+    const auth = getAuth();
     const location = useLocation();
-    const [userData, setuserData] = useState([]);
+    const [userData, setuserData] = useState({});
     const navigationIcon = [
         {
             id: 1,
@@ -87,32 +89,38 @@ const Sidebar = () => {
     useEffect(() => {
         const ferchData = () => {
             const userRef = ref(db, 'users/');
+            let obj = [];
             onValue(userRef, (snapshot) => {
-                let userArr = [];
                 // console.log(snapshot);
                 snapshot.forEach((item) => {
-                    userArr.push({ ...item.val(), userKey: item.key });
+                    if (auth.currentUser.uid === item.val().userid) {
+                        obj = { ...item.val(), userKey: item.key };
+                    }
+                    // console.log(item.val().userid);
                 })
-                setuserData(userArr);
+                setuserData(obj);
 
             });
 
         }
         ferchData()
     }, [])
-// console.log(userData);
+
+    // console.log(auth.currentUser.uid);
+    console.log(userData);
 
     return (
         <div className=' h-full  bg-green-400 rounded-2xl overflow-hidden'>
-            <div className='flex justify-center'>
+            <div className='flex flex-col items-center justify-center'>
                 <div className='h-[70px] w-[70px] mt-4 rounded-full relative cursor-pointer group'>
                     <picture>
-                        <img className='w-full h-full rounded-full object-cover' src={proPic} alt='proPic' />
+                        <img className='w-full h-full rounded-full object-cover' src={userData?.profile_picture || avatar } alt="pro pic"/>
                     </picture>
                     <div onClick={handleProPictureupdate} className='absolute hidden group-hover:block left-[30%] top-1/2 text-3xl text-white'>
                         <TiUpload />
                     </div>
                 </div>
+                <div className='flex flex-col text-center'>{userData?.username || "name"}</div>
             </div>
             {/* navigation icon */}
             <div className='flex flex-col gap-y-3 items-center justify-center mt-8'>
