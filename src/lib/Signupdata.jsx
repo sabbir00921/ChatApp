@@ -1,5 +1,6 @@
 const _ = {};
 import { toast, Bounce } from 'react-toastify';
+import moment from 'moment';
 
 _.signupdata = () => {
     return [{
@@ -30,7 +31,7 @@ _.SuccessToast = (msg = "Success") => {
         progress: undefined,
         theme: "light",
         transition: Bounce,
-        });
+    });
 }
 _.ErrorToast = (msg = "Error") => {
     toast.error(msg, {
@@ -56,7 +57,9 @@ _.InfoToast = (msg) => {
         progress: undefined,
         theme: "light",
         transition: Bounce,
-        });
+    });
 }
-
+_.getTime = () => {
+    return moment().format( "DD MM YYYY hh:mm:ss")
+}
 export default _;

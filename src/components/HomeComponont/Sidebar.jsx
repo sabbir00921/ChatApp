@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import avatar from '../../images/avatar.png'
 import { AiOutlineSetting } from 'react-icons/ai'
 import { IoMdNotificationsOutline } from 'react-icons/io'
 import { IoHomeOutline } from 'react-icons/io5'
@@ -7,8 +6,9 @@ import { LuMessageCircleMore } from 'react-icons/lu'
 import { RiLogoutBoxRLine } from 'react-icons/ri'
 import { TiUpload } from 'react-icons/ti'
 import { Link, useLocation, } from 'react-router'
-import { getDatabase, ref, onValue } from "firebase/database";
-import { getAuth } from "firebase/auth";
+import { getDatabase, ref, onValue, update } from "firebase/database";
+import avatar from '../../images/avatar.png'
+import { getAuth, updateProfile } from "firebase/auth";
 
 
 const Sidebar = () => {
@@ -68,13 +68,23 @@ const Sidebar = () => {
                 if (error) {
                     throw new Error("cloudinary profile picture upload error")
                 };
+                //Update Profile picture
                 if (result.info.secure_url) {
                     console.log(result.info.secure_url);
+                    //Update DB Profile picture
+                    update(ref(db, `users/${userData.userKey}`), {
+                        profile_picture: result.info.secure_url
+                    });
+                    //Update auth Profile picture
+                    updateProfile(auth.currentUser, {
+                        photoURL: result.info.secure_url
+                    }).then(() => {
+                        console.log("auth photoURL updated");
+                    }).catch((err) => {
+                        console.log("Error auth photoURL updated", err);
+                    })
 
                 }
-
-
-
             });
         }
         else {
@@ -106,21 +116,18 @@ const Sidebar = () => {
         ferchData()
     }, [])
 
-    // console.log(auth.currentUser.uid);
-    console.log(userData);
-
     return (
         <div className=' h-full  bg-green-400 rounded-2xl overflow-hidden'>
             <div className='flex flex-col items-center justify-center'>
                 <div className='h-[70px] w-[70px] mt-4 rounded-full relative cursor-pointer group'>
-                    <picture>
-                        <img className='w-full h-full rounded-full object-cover' src={userData?.profile_picture || avatar } alt="pro pic"/>
+                    <picture className="bg-amber-400">
+                        <img className="rounded-full object-cover h-18 w-18" src={userData?.profile_picture || avatar} />
                     </picture>
                     <div onClick={handleProPictureupdate} className='absolute hidden group-hover:block left-[30%] top-1/2 text-3xl text-white'>
                         <TiUpload />
                     </div>
                 </div>
-                <div className='flex flex-col text-center'>{userData?.username || "name"}</div>
+                <div className='flex flex-col text-center mt-2'>{userData?.username || "name"}</div>
             </div>
             {/* navigation icon */}
             <div className='flex flex-col gap-y-3 items-center justify-center mt-8'>

@@ -1,33 +1,108 @@
 import React, { useEffect, useState } from 'react'
 import { FaPlus } from 'react-icons/fa';
 import { HiOutlineDotsVertical } from 'react-icons/hi'
-import { getDatabase, ref, onValue } from "firebase/database";
+import { getDatabase, ref, onValue, set, push } from "firebase/database";
+import { getAuth } from "firebase/auth";
+import lib from "../../lib/Signupdata"
+
 
 const UserList = () => {
     const db = getDatabase();
+    const auth = getAuth();
     const arrLength = 52;
-    const [userList, setUserList] = useState()
+    const [userList, setUserList] = useState();
+    const [currentUser, setCurrentUser] = useState();
+    const [frReqList, setfrReqList] = useState();
 
-
+    // fetch user data from DB
     useEffect(() => {
         const userRef = ref(db, 'users/');
         let userArr = []
         onValue(userRef, (snapshot) => {
             snapshot.forEach((item) => {
-                userArr.push({ ...item.val(), userKey: item.key })
+                if (auth?.currentUser.uid !== item.val().userid) {
+                    userArr.push({ ...item.val(), userKey: item.key })
+                }
+                else {
+                    setCurrentUser({ ...item.val(), userKey: item.key })
+                }
             })
             setUserList(userArr)
         });
-        console.log(userArr);
 
         //Cleanup finction
         return () => {
             const userRef = ref(db, 'users/');
         }
     }, [])
-    // console.log(userList);
 
 
+
+    // fetch frReqList data from DB
+    useEffect(() => {
+        const frReqRef = ref(db, 'frRequest/');
+        let frReqArr = [];
+        onValue(frReqRef, (snapshot) => {
+            // console.log(auth?.currentUser.uid);
+            snapshot.forEach((frnd) => {
+                // console.log(frnd?.val().reciver.userid);
+                
+                
+                if (auth?.currentUser.uid == frnd?.val().reciver.userid) {
+                    // console.log(frnd.val());
+
+                    frReqArr.push(auth?.currentUser?.uid.concat(frnd?.val()?.sender?.userid))
+                }
+                else {
+                    // console.log("recive");
+                }
+
+            })
+            setfrReqList(frReqArr)
+        });
+        // console.log("sender info", frReqList);
+
+        //Cleanup finction
+        return () => {
+            const userRef = ref(db, 'frRequest/');
+        }
+    }, [])
+    // console.log(frReqList);
+
+    // handleFrReq function implement
+    const handleFrReq = (user) => {
+        // console.log(user);
+
+        set(push(ref(db, 'frRequest/')), {
+            sender: {
+                email: auth?.currentUser?.email || "missing",
+                profile_picture: auth?.currentUser?.photoURL || "null",
+                userid: auth?.currentUser?.uid || "null",
+                username: auth?.currentUser?.displayName || "null"
+            },
+            reciver: {
+                email: user?.email || "missing",
+                profile_picture: user?.profile_picture || "null",
+                userid: user?.userid || "null",
+                username: user?.username || "null"
+            },
+            crearedAt: lib.getTime()
+        }).then(() => {
+            set(push(ref(db, 'notification/')), {
+                notification: `${currentUser?.email} sent a friend request`,
+                crearedAt: lib.getTime()
+            }).then(() => {
+                lib.SuccessToast(`friend request sent to ${user?.username}`)
+            }).catch((err) => {
+                console.log("notification err", err);
+
+            })
+        }).catch((err) => {
+            console.log("frRequestotification err", err);
+
+        })
+
+    }
     return (
         <div className='w-[32%] mb-2 h-[48dvh] overflow-hidden bg-gray-200 px-2 pt-2  rounded-2xl'>
             {userList ? <div className=' shadow-2xl rounded-2xl h-full'>
@@ -48,7 +123,7 @@ const UserList = () => {
                                 <p className='text-sm'>how are you?</p>
                             </div>
                             <div>
-                                <button type="button" class="text-white  bg-blue-500   font-medium  text-sm rounded-lg  p-2 text-center cursor-pointer"><FaPlus /></button>
+                                <button type="button" onClick={() => { handleFrReq(user) }} class="text-white  bg-blue-500   font-medium  text-sm rounded-lg  p-2 text-center cursor-pointer"><FaPlus /></button>
                             </div>
                         </div>
                     ))}
