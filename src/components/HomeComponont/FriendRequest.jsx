@@ -31,7 +31,7 @@ const FriendRequest = () => {
         return () => {
             const userRef = ref(db, 'frRequest/');
         }
-    }, [])
+    }, [frReqList])
     // console.log(frReqList);
     // console.log(frReqList);
     const handleAccept = (friend) => {
@@ -67,7 +67,7 @@ const FriendRequest = () => {
                     {frReqList?.map((friend, index) => (
                         <div className={frReqList?.length - 1 == index ? 'flex justify-between items-center p-2 pr-4' : 'flex justify-between items-center p-2 pr-4 border-b-[1px]'}>
                             <div className='w-[40px] h-[40px] cursor-pointer'>
-                                <picture>
+                                <picture className=''>
                                     <img className='w-[40px] h-[40px] rounded-full border-[1px] object-cover' src={friend?.sender?.profile_picture
                                     } alt="" />
                                 </picture>

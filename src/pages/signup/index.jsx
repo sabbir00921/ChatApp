@@ -51,8 +51,7 @@ const Signup = () => {
 
                 updateProfile(auth.currentUser, {
                     displayName: fullname,
-                    photoURL: "https://images.pexels.com/photos/15910063/pexels-photo-15910063/free-photo-of-landscape-with-the-matterhorn.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-                })
+                    photoURL: "https://static.vecteezy.com/system/resources/thumbnails/001/840/618/small/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-free-vector.jpg"})
                 // console.log(auth.currentUser);
 
             })
@@ -63,7 +62,7 @@ const Signup = () => {
                         username: auth.currentUser.displayName || fullname,
                         email: auth.currentUser.email || email,
                         password: password,
-                        profile_picture: auth.currentUser.photoURL || "https://images.pexels.com/photos/15910063/pexels-photo-15910063/free-photo-of-landscape-with-the-matterhorn.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+                        profile_picture: auth.currentUser.photoURL || "https://static.vecteezy.com/system/resources/thumbnails/001/840/618/small/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-free-vector.jpg",
                     });
                     // alert("send email for verification");
                     InfoToast("send email for verification")

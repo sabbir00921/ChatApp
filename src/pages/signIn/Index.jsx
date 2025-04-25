@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { FaGoogle } from 'react-icons/fa'
 import image from "../../images/loginimg.jpg"
 import lib from "../../lib/Signupdata"
-import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth,  signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword } from "firebase/auth";
 import { getDatabase, ref, set, push } from "firebase/database";
 import { useNavigate } from 'react-router';
 

@@ -29,7 +29,7 @@ const Friends = () => {
         return () => {
             const friendsRef = ref(db, 'friendsList/');
         }
-    }, [])
+    }, [friendList])
     console.log(friendList);
 
     return (

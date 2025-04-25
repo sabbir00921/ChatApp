@@ -34,7 +34,7 @@ const UserList = () => {
         return () => {
             const userRef = ref(db, 'users/');
         }
-    }, [])
+    }, [userList])
 
 
 
@@ -46,8 +46,8 @@ const UserList = () => {
             // console.log(auth?.currentUser.uid);
             snapshot.forEach((frnd) => {
                 // console.log(frnd?.val().reciver.userid);
-                
-                
+
+
                 if (auth?.currentUser.uid == frnd?.val().reciver.userid) {
                     // console.log(frnd.val());
 
@@ -60,9 +60,7 @@ const UserList = () => {
             })
             setfrReqList(frReqArr)
         });
-        // console.log("sender info", frReqList);
 
-        //Cleanup finction
         return () => {
             const userRef = ref(db, 'frRequest/');
         }
