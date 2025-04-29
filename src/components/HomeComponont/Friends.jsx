@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { HiOutlineDotsVertical } from 'react-icons/hi';
 import { getDatabase, ref, onValue, set, push } from "firebase/database";
 import { getAuth } from 'firebase/auth';
-import moment from 'moment';
 
 const Friends = () => {
     const db = getDatabase();
@@ -30,7 +29,6 @@ const Friends = () => {
             const friendsRef = ref(db, 'friendsList/');
         }
     }, [friendList])
-    console.log(friendList);
 
     return (
         <div className='w-[32%] mb-2 h-[48dvh] overflow-hidden bg-gray-200 px-2 pt-2  rounded-2xl'>

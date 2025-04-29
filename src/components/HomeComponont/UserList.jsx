@@ -10,9 +10,9 @@ const UserList = () => {
     const db = getDatabase();
     const auth = getAuth();
     const arrLength = 52;
-    const [userList, setUserList] = useState();
-    const [currentUser, setCurrentUser] = useState();
-    const [frReqList, setfrReqList] = useState();
+    const [userList, setUserList] = useState([]);
+    const [currentUser, setCurrentUser] = useState([]);
+    const [frReqList, setfrReqList] = useState([]);
 
     // fetch user data from DB
     useEffect(() => {
@@ -20,6 +20,7 @@ const UserList = () => {
         let userArr = []
         onValue(userRef, (snapshot) => {
             snapshot.forEach((item) => {
+                
                 if (auth?.currentUser.uid !== item.val().userid) {
                     userArr.push({ ...item.val(), userKey: item.key })
                 }
@@ -64,7 +65,7 @@ const UserList = () => {
         return () => {
             const userRef = ref(db, 'frRequest/');
         }
-    }, [])
+    }, [frReqList])
     // console.log(frReqList);
 
     // handleFrReq function implement
