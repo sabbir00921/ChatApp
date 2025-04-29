@@ -13,8 +13,8 @@ const Friends = () => {
 
     useEffect(() => {
         const friendsRef = ref(db, 'friendsList/');
-        let friendsArr = [];
         onValue(friendsRef, (snapshot) => {
+            let friendsArr = [];
             snapshot.forEach((friends) => {
                 if (auth?.currentUser.uid == friends.val()?.reciver.userid) {
 
@@ -28,8 +28,8 @@ const Friends = () => {
         return () => {
             const friendsRef = ref(db, 'friendsList/');
         }
-    }, [friendList])
-console.log(friendList);
+    }, [])
+// console.log(friendList);
 
     return (
         <div className='w-[32%] mb-2 h-[48dvh] overflow-hidden bg-gray-200 px-2 pt-2  rounded-2xl'>

@@ -51,7 +51,8 @@ const Signup = () => {
 
                 updateProfile(auth.currentUser, {
                     displayName: fullname,
-                    photoURL: "https://static.vecteezy.com/system/resources/thumbnails/001/840/618/small/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-free-vector.jpg"})
+                    photoURL: "https://img.favpng.com/2/7/20/computer-icons-professional-avatar-png-favpng-XqT83bv27wiMFwZzJP3R1NTu6.jpg"
+                })
                 // console.log(auth.currentUser);
 
             })
@@ -62,7 +63,7 @@ const Signup = () => {
                         username: auth.currentUser.displayName || fullname,
                         email: auth.currentUser.email || email,
                         password: password,
-                        profile_picture: auth.currentUser.photoURL || "https://static.vecteezy.com/system/resources/thumbnails/001/840/618/small/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-free-vector.jpg",
+                        profile_picture: auth?.currentUser?.photoURL || "https://img.favpng.com/2/7/20/computer-icons-professional-avatar-png-favpng-XqT83bv27wiMFwZzJP3R1NTu6.jpg",
                     });
                     // alert("send email for verification");
                     InfoToast("send email for verification")

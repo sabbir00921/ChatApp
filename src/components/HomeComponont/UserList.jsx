@@ -17,8 +17,8 @@ const UserList = () => {
     // fetch user data from DB
     useEffect(() => {
         const userRef = ref(db, 'users/');
-        let userArr = []
         onValue(userRef, (snapshot) => {
+            let userArr = []
             snapshot.forEach((item) => {
                 
                 if (auth?.currentUser.uid !== item.val().userid) {
@@ -35,15 +35,15 @@ const UserList = () => {
         return () => {
             const userRef = ref(db, 'users/');
         }
-    }, [userList])
+    }, [])
 
 
 
     // fetch frReqList data from DB
     useEffect(() => {
         const frReqRef = ref(db, 'frRequest/');
-        let frReqArr = [];
         onValue(frReqRef, (snapshot) => {
+            let frReqArr = [];
             // console.log(auth?.currentUser.uid);
             snapshot.forEach((frnd) => {
                 // console.log(frnd?.val().reciver.userid);
@@ -65,7 +65,7 @@ const UserList = () => {
         return () => {
             const userRef = ref(db, 'frRequest/');
         }
-    }, [frReqList])
+    }, [])
     // console.log(frReqList);
 
     // handleFrReq function implement

@@ -13,8 +13,8 @@ const FriendRequest = () => {
     // fetch data from frRequest
     useEffect(() => {
         const userRef = ref(db, 'frRequest/');
-        let frReqArr = [];
         onValue(userRef, (snapshot) => {
+            let frReqArr = [];
             snapshot.forEach((frReq) => {
 
                 if (auth.currentUser.uid == frReq?.val().reciver.userid) {
@@ -31,7 +31,7 @@ const FriendRequest = () => {
         return () => {
             const userRef = ref(db, 'frRequest/');
         }
-    }, [frReqList])
+    }, [])
     // console.log(frReqList);
     // console.log(frReqList);
     const handleAccept = (friend) => {
