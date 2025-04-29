@@ -16,20 +16,21 @@ const Friends = () => {
         onValue(friendsRef, (snapshot) => {
             let friendsArr = [];
             snapshot.forEach((friends) => {
-                if (auth?.currentUser.uid == friends.val()?.reciver.userid) {
+
+                if (friends.val().friendsUid == friends.val()?.reciver.userid.concat(friends.val()?.sender.userid)) {
 
                     friendsArr.push({ ...friends.val(), frKey: friends.key })
                 }
             })
             setfriendList(friendsArr)
         });
+console.log(friendList);
 
         //Cleanup finction
         return () => {
             const friendsRef = ref(db, 'friendsList/');
         }
     }, [])
-// console.log(friendList);
 
     return (
         <div className='w-[32%] mb-2 h-[48dvh] overflow-hidden bg-gray-200 px-2 pt-2  rounded-2xl'>
@@ -44,11 +45,11 @@ const Friends = () => {
                             <div className={friendList?.length - 1 == index ? 'flex justify-between items-center p-2 pr-4' : 'flex justify-between items-center p-2 pr-4 border-b-[1px]'}>
                                 <div className='w-[40px] h-[40px] rounded-full  cursor-pointer'>
                                     <picture>
-                                        <img className='w-full h-full rounded-full border-[1px] object-cover' src={item?.sender?.profile_picture} alt="" />
+                                        <img className='w-full h-full rounded-full border-[1px] object-cover' src={auth.currentUser.uid ==item.sender.userid? item?.reciver?.profile_picture:item?.sender?.profile_picture} alt="" />
                                     </picture>
                                 </div>
                                 <div className='w-[55%] '>
-                                    <h1 className='font-bold'>{item?.sender.username}</h1>
+                                    <h1 className='font-bold'>{auth.currentUser.uid ==item.sender.userid? item?.reciver.username:item?.sender?.username}</h1>
                                     <p className='text-sm'>Start chating...</p>
                                 </div>
                                 <div className='w-[25%]'>

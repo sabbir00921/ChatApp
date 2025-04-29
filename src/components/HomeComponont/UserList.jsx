@@ -13,30 +13,30 @@ const UserList = () => {
     const [userList, setUserList] = useState([]);
     const [currentUser, setCurrentUser] = useState([]);
     const [frReqList, setfrReqList] = useState([]);
+    const [friends, setFriends] = useState([])
 
-    // fetch user data from DB
-    useEffect(() => {
-        const userRef = ref(db, 'users/');
-        onValue(userRef, (snapshot) => {
-            let userArr = []
-            snapshot.forEach((item) => {
-                
-                if (auth?.currentUser.uid !== item.val().userid) {
-                    userArr.push({ ...item.val(), userKey: item.key })
-                }
-                else {
-                    setCurrentUser({ ...item.val(), userKey: item.key })
-                }
-            })
-            setUserList(userArr)
-        });
-
-        //Cleanup finction
-        return () => {
+        // fetch user data from DB
+        useEffect(() => {
             const userRef = ref(db, 'users/');
-        }
-    }, [])
+            onValue(userRef, (snapshot) => {
+                let userArr = []
+                snapshot.forEach((item) => {
 
+                    if (auth?.currentUser.uid !== item.val().userid) {
+                        userArr.push({ ...item.val(), userKey: item.key })
+                    }
+                    else {
+                        setCurrentUser({ ...item.val(), userKey: item.key })
+                    }
+                })
+                setUserList(userArr)
+            });
+
+            //Cleanup finction
+            return () => {
+                const userRef = ref(db, 'users/');
+            }
+        }, [])
 
 
     // fetch frReqList data from DB
@@ -44,15 +44,14 @@ const UserList = () => {
         const frReqRef = ref(db, 'frRequest/');
         onValue(frReqRef, (snapshot) => {
             let frReqArr = [];
-            // console.log(auth?.currentUser.uid);
-            snapshot.forEach((frnd) => {
-                // console.log(frnd?.val().reciver.userid);
+            snapshot.forEach((frndreq) => {
+                // console.log(auth?.currentUser.uid);
+                // console.log(frndreq?.val().sender.userid);
 
 
-                if (auth?.currentUser.uid == frnd?.val().reciver.userid) {
-                    // console.log(frnd.val());
-
-                    frReqArr.push(auth?.currentUser?.uid.concat(frnd?.val()?.sender?.userid))
+                if (auth?.currentUser.uid == frndreq?.val().sender.userid) {
+                    
+                    frReqArr.push(frndreq?.val().reciver.userid)//in userList there is exist only other user user without current user
                 }
                 else {
                     // console.log("recive");
@@ -61,16 +60,50 @@ const UserList = () => {
             })
             setfrReqList(frReqArr)
         });
-
+        
         return () => {
             const userRef = ref(db, 'frRequest/');
         }
     }, [])
+    // console.log(userList);
     // console.log(frReqList);
+
+
+    // fetch Friens data data from DB
+    useEffect(() => {
+        const frndRef = ref(db, 'friendsList/');
+        onValue(frndRef, (snapshot) => {
+            let frndArr = [];
+            // console.log(auth?.currentUser.uid);
+            snapshot.forEach((frnd) => {
+                console.log(auth.currentUser.uid, "auth");
+                console.log(frnd?.val().sender.userid, "fetch");
+
+
+                if (auth?.currentUser.uid == frnd?.val().reciver.userid) {
+                    // console.log(frnd.val());
+
+                    frndArr.push(frnd?.val().sender.userid)
+                }
+                else {
+                    // console.log("recive");
+                }
+
+            })
+            setFriends(frndArr)
+        });
+
+        return () => {
+            const frndRef = ref(db, 'friendsList/');
+        }
+    }, [])
+
+    // console.log(userList);
+    console.log(friends);
+
 
     // handleFrReq function implement
     const handleFrReq = (user) => {
-        // console.log(user);
 
         set(push(ref(db, 'frRequest/')), {
             sender: {
@@ -85,7 +118,7 @@ const UserList = () => {
                 userid: user?.userid || "null",
                 username: user?.username || "null"
             },
-            crearedAt: lib.getTime()
+            crearedAt: lib.getTime(),
         }).then(() => {
             set(push(ref(db, 'notification/')), {
                 notification: `${currentUser?.email} sent a friend request`,
@@ -112,18 +145,32 @@ const UserList = () => {
                 <div className='overflow-y-scroll h-[43dvh] '>
                     {userList?.map((user, index) => (
                         <div className={userList.length - 1 == index ? 'flex justify-between items-center p-2 pr-4' : 'flex justify-between items-center p-2 pr-4 border-b-[1px]'}>
-                            <div className='w-[40px] h-[40px]  cursor-pointer'>
-                                <picture>
-                                    <img className='rounded-full h-10 w-10 border-[1px] object-cover' src={user?.profile_picture} alt="" />
-                                </picture>
+                            <div className='flex w-[60%]'>
+                                <div className='w-[40px] h-[40px]  cursor-pointer'>
+                                    <picture>
+                                        <img className='rounded-full h-10 w-10 border-[1px] object-cover' src={user?.profile_picture} alt="" />
+                                    </picture>
+                                </div>
+                                <div className='w-[55%] ms-4' >
+                                    <h1 className='font-bold'>{user.username || "Set Name"}</h1>
+                                    <p className='text-sm'>how are you?</p>
+                                </div>
                             </div>
-                            <div className='w-[55%]' >
-                                <h1 className='font-bold'>{user.username || "Set Name"}</h1>
-                                <p className='text-sm'>how are you?</p>
-                            </div>
-                            <div>
-                                <button type="button" onClick={() => { handleFrReq(user) }} class="text-white  bg-blue-500   font-medium  text-sm rounded-lg  p-2 text-center cursor-pointer"><FaPlus /></button>
-                            </div>
+                            {frReqList.includes(user.userid) ?
+                                <div>
+                                    <button type="button" class=" text-white  bg-blue-500   font-medium  text-sm rounded-lg  p-2 text-center ">Requsted</button>
+                                </div>
+                                :
+                                friends.includes(user.userid)?
+                                <div>
+                                    <button type="button" class="text-white  bg-blue-500   font-medium  text-sm rounded-lg  py-2 px-4 text-center ">Friend</button>
+                                </div>
+                                :
+                                <div>
+                                    <button type="button" onClick={() => { handleFrReq(user) }} class="text-white  bg-blue-500   font-medium  text-sm rounded-lg  p-2 text-center cursor-pointer"><FaPlus /></button>
+                                </div>
+                                }
+
                         </div>
                     ))}
 

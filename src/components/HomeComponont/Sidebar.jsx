@@ -121,7 +121,7 @@ const Sidebar = () => {
             <div className='flex flex-col items-center justify-center'>
                 <div className='h-[70px] w-[70px] mt-4 rounded-full relative cursor-pointer group'>
                     <picture className="bg-amber-400">
-                        <img className="rounded-full object-cover h-18 w-18" src={userData?.profile_picture || avatar} />
+                        <img className="rounded-full object-cover h-18 w-18" src={userData?.profile_picture || "https://img.favpng.com/2/7/20/computer-icons-professional-avatar-png-favpng-XqT83bv27wiMFwZzJP3R1NTu6.jpg"} />
                     </picture>
                     <div onClick={handleProPictureupdate} className='absolute hidden group-hover:block left-[30%] top-1/2 text-3xl text-white'>
                         <TiUpload />

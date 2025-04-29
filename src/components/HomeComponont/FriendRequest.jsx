@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { HiOutlineDotsVertical } from 'react-icons/hi';
-import { getDatabase, ref, onValue, set, push } from "firebase/database";
+import { getDatabase, ref, onValue, set, push, remove } from "firebase/database";
 import lib from "../../lib/Signupdata"
 import { getAuth } from 'firebase/auth';
 import moment from 'moment';
@@ -9,6 +9,7 @@ const FriendRequest = () => {
     const db = getDatabase();
     const auth = getAuth();
     const [frReqList, setfrReqList] = useState();
+    const [friendList, setfriendList] = useState();
 
     // fetch data from frRequest
     useEffect(() => {
@@ -35,7 +36,9 @@ const FriendRequest = () => {
     // console.log(frReqList);
     // console.log(frReqList);
     const handleAccept = (friend) => {
-        // console.log(friend);
+        
+
+        // store data for friendsList
         set(push(ref(db, 'friendsList/')), {
             reciver: {
                 email: auth?.currentUser?.email || "missing",
@@ -51,9 +54,35 @@ const FriendRequest = () => {
             },
             crearedAt: lib.getTime(),
             friendsUid: `${friend?.reciver?.userid}${friend?.sender?.userid}`
-        })
-    }
+        });
+        // remove data from frRequest
+        const frRef = ref(db, `frRequest/${friend.frKey}`);
+        remove(frRef)
+        // console.log(friend);
 
+    }
+    // console.log(frReqList)
+
+    // fetch data from Friens
+
+    useEffect(() => {
+        const friendsRef = ref(db, 'friendsList/');
+        onValue(friendsRef, (snapshot) => {
+            let friendsArr = [];
+            snapshot.forEach((friends) => {
+                if (auth?.currentUser.uid == friends.val()?.reciver.userid) {
+
+                    friendsArr.push({ ...friends.val(), frKey: friends.key })
+                }
+            })
+            setfriendList(friendsArr)
+        });
+
+        //Cleanup finction
+        return () => {
+            const friendsRef = ref(db, 'friendsList/');
+        }
+    }, [])
 
 
     return (
